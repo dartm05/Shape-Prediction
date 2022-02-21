@@ -4,6 +4,7 @@ import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } fro
 // reactstrap components
 import { Button, Card, Container, Row, Col,Navbar} from "reactstrap";
 import { useRef, useState, useEffect } from "react";
+import html2canvas from 'html2canvas';
 
 
 
@@ -32,11 +33,25 @@ function Canvas(props) {
 
 
   const handleSubmit = async() => {
-  
-      const url = `/prediction`;
-      console.log(url);
-      const res = await fetch(url);
-      let newItem = await res.json();
+    
+    const element = canvasRef.current;
+    const canvas = await html2canvas(element);
+
+    const data = canvas.toDataURL('image/jpg');
+    setDrawing(data);
+    // const link = document.createElement('a');
+
+    // const requestOptions = {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify(data)
+    // };
+
+    //   const url = `/predict`;
+    //   console.log(url);
+    //   const res = await fetch(url,requestOptions)
+    //   .then(response => response.json())
+    //   .then(res => console.log(res));
     
   }
 
@@ -74,6 +89,7 @@ function Canvas(props) {
     context.strokeStyle = "black"
     context.lineWidth = 5
     contextRef.current = context;
+
   }
   
     return(
@@ -83,7 +99,7 @@ function Canvas(props) {
            <br/>
             <h1>Shape predictor</h1>
             <br/>
-            <img src={drawing} alt="exported drawing" />
+            <img height={230} src={drawing} alt="exported drawing" />
               
             <section>
                <Row>
